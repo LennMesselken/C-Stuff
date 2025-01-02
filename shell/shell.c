@@ -4,7 +4,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-#define TOKEN_DELIMITER " "
+#define TOKEN_DELIMITER " \n\t"
 
 void shell_interactive(void);
 void shell_no_interactive(void);
@@ -15,12 +15,12 @@ int execute_command(char** args);
 int new_process(char** args);
 
 int own_cd(char** args);
-int own_ls(char** args);
 int own_echo(char** args);
 int own_exit(char** args);
 
 
 int main (void){
+    //Check if Running in Terminal
     if (isatty(STDIN_FILENO) == 1){
         shell_interactive();
     } else {
@@ -32,7 +32,7 @@ int main (void){
 void shell_interactive(void){
     char* line;
     char **args;
-    int status = -1;
+    int status = 0;
     do {
         line = read_next_line();
         args = tokenize(line);
@@ -41,16 +41,16 @@ void shell_interactive(void){
         //free(line);
         //free(args);
         //Check if Process should be exited
-        if (status >= 0){
+        if (status != 0){
             exit(status);
         }
-    } while (status == -1);
+    } while (0);
 }
 
 void shell_no_interactive(void){
     char* line;
     char **args;
-    int status = -1;
+    int status =  0;
     do {
         line = read_stream();
         args = tokenize(line);
@@ -59,10 +59,10 @@ void shell_no_interactive(void){
         free(line);
         free(args);
         //Check if Process should be exited
-        if (status >= 0){
+        if (status != 0){
             exit(status);
         }
-    } while (status == -1);
+    } while (0);
 }
 
 char* read_next_line(void){
@@ -126,8 +126,8 @@ char** tokenize(char* line){
 }
 
 int execute_command (char** args){
-    char* built_in_funcs_list[] = {"cd", "ls", "echo", "exit"};
-    int (*built_in_funcs[])(char **) = {&own_cd, & own_ls, &own_echo, &own_exit};
+    char* built_in_funcs_list[] = {"cd", "echo", "exit"};
+    int (*built_in_funcs[])(char **) = {&own_cd, &own_echo, &own_exit};
     //Check if No Command was entered
     if (args[0] == NULL) {
         return -1;
@@ -150,11 +150,12 @@ int new_process(char** args){
     //create a child process
     pid = fork();
     if (pid == 0){
-        //execvp finds executable name (args[0]) ; p means os finds path to fuile
+        //execvp finds executable name (args[0]) ; p means os finds path to file
         if(execvp(args[0], args) == -1){
             perror("error in new process: child process");
+            exit(EXIT_FAILURE);
         }
-        exit(EXIT_FAILURE);
+       
     } else if (pid < 0){
         perror("error in new process: forking");
     } else {
@@ -167,17 +168,28 @@ int new_process(char** args){
 }
 
 int own_cd (char** args){
-    return 0;
-}
-
-int own_ls (char** args){
-    return 0;
+    if (args[1] == NULL){
+        perror("error in own_cd: no path specified");
+        exit(EXIT_FAILURE);
+    }
+    return (chdir(args[1]));
 }
 
 int own_echo (char** args){
+    if (args[1] == NULL){
+        perror("error in own_echo: nothing to echo");
+        exit(EXIT_FAILURE);
+    }
+    int i = 1;
+    while(args[i] != NULL){
+        printf("%s ", args[i]);
+        i++;
+    }
+    printf("\n");
     return 0;
 }
 
 int own_exit (char** args){
+    printf("\n");
     return 0;
 }
