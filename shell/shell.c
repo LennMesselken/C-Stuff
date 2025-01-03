@@ -14,6 +14,9 @@ char** tokenize(char* line);
 int execute_command(char** args);
 int new_process(char** args);
 
+void check_redirect_and_pipe(char** args);
+FILE* fp = NULL;
+
 int own_cd(char** args);
 int own_echo(char** args);
 int own_exit(char** args);
@@ -45,6 +48,7 @@ void shell_interactive(void){
             exit(status);
         }
     } while (0);
+    fclose(fp);
 }
 
 void shell_no_interactive(void){
@@ -125,14 +129,41 @@ char** tokenize(char* line){
 
 }
 
+void check_redirect_and_pipe(char** args){
+    char arg[1024];
+    int i = 1;
+    while (strcpy(arg, args[i]) != NULL){
+        printf("%s", arg);
+        if (strcmp(arg, "<") == 0){
+            fp = freopen(args[i-1], "w", stdout);   
+            return;   
+        } else if (strcmp(arg, "<<") == 0){
+            fp = freopen(args[i-1], "a", stdout);
+            return;
+        } else if (strcmp(arg, ">") == 0){
+            fp = freopen(args[i+1], "w", stdout);
+            return;
+        } else if (strcmp(arg, ">>") == 0){
+            fp = freopen(args[i+1], "a", stdout);
+            return;
+        } 
+        i++;
+    }
+    fp = NULL;
+    return;
+    
+}
+
 int execute_command (char** args){
     char* built_in_funcs_list[] = {"cd", "echo", "exit"};
     int (*built_in_funcs[])(char **) = {&own_cd, &own_echo, &own_exit};
+    FILE* fp;
     //Check if No Command was entered
     if (args[0] == NULL) {
         return -1;
     }
     //Check if Command is a built in function
+    check_redirect_and_pipe(args);
     for (int i = 0; i < sizeof(built_in_funcs) / sizeof(char*); i++){
         if (strcmp(args[0], built_in_funcs_list[i]) == 0){
             return ((*built_in_funcs[i])(args));
