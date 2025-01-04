@@ -223,4 +223,4 @@ int own_echo (char** args){
 int own_exit (char** args){
     printf("\n");
     return 0;
-} 
+}  
