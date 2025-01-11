@@ -7,6 +7,8 @@
 
 #define PORT 8080
 
+void* handle_client(void* args);
+
 int server_fd;
 struct sockaddr_in server_addr;
 
@@ -16,7 +18,7 @@ int main(){
         perror("socket failure");
         exit(EXIT_FAILURE);
     } 
-    
+
     //socket config
     server_addr.sin_family = AF_INET; //IPv4
     server_addr.sin_addr.s_addr = INADDR_ANY; //Accept Connections from any network interface
@@ -33,4 +35,26 @@ int main(){
         perror("listen failure");
         exit(EXIT_FAILURE);
     }
+
+
+    while (1){
+        //client info
+        struct sockaddr_in client_addr;
+        socklen_t client_addr_len = sizeof(client_addr);
+        int* client_fd = malloc(sizeof(int));
+
+        //accepts client requests
+        if ((*client_fd = accept(server_fd,(struct sockaddr*)&client_addr, client_addr_len)) < 0){
+            perror("accept failed");
+            exit(EXIT_FAILURE);
+        }
+
+        //create a new thread to handle request
+        pthread_t thread_id;
+        pthread_create(&thread_id, NULL, handle_client, (void*)client_fd);
+    }
+}
+
+void* handle_client(void* args){
+
 }
