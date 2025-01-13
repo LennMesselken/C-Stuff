@@ -219,9 +219,7 @@ void build_http_response(const char *file_name, const char *file_ext, char *resp
 
     // copy file to response buffer
     ssize_t bytes_read;
-    while ((bytes_read = read(file_fd, 
-                            response + *response_len, 
-                            BUFFER_SIZE - *response_len)) > 0) {
+    while ((bytes_read = read(file_fd, response + *response_len, BUFFER_SIZE - *response_len)) > 0) {
         *response_len += bytes_read;
     }
     free(header);
