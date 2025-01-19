@@ -8,7 +8,7 @@
 #include <util.h>
 #include "./lib/utility_functions.c"
 
-#define PORT 8080
+#define PORT 8082
 
 int main(int argc, char* argv[]){
     int server_fd;

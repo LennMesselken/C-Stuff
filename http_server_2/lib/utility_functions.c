@@ -77,7 +77,7 @@ void build_http_response(const char* file_name, const char* file_ext, char* resp
                 //Get File extension
                 char file_ext[32];
                 strcpy(file_ext, get_file_extension(file_name));
-                
+
                 //Build http Response
                 char* response = (char*) malloc(BUFFER_SIZE * 2 * sizeof(char));
                 size_t response_len;
