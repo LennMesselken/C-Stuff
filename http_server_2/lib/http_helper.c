@@ -9,6 +9,8 @@ const char* get_mime_type(const char* file_ext){
         return "text/plain";
     } else if (strcasecmp(file_ext, "css") == 0){
         return "text/css";
+    } else if (strcasecmp(file_ext, "js") == 0){
+        return "text.js";
     } else if (strcasecmp(file_ext, "jpg") == 0 || strcasecmp(file_ext, "jpeg") == 0){
         return "image/jpeg";
     } else if (strcasecmp(file_ext, "png") == 0){
