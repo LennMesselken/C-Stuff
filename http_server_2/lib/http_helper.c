@@ -2,6 +2,7 @@
 #include <stdlib.h>
 
 const char* get_mime_type(const char* file_ext){
+    
     if(strcasecmp(file_ext, "html") == 0 || strcasecmp(file_ext, "htm") == 0){
         return "text/html";
     } else if (strcasecmp(file_ext, "txt") == 0){
@@ -15,7 +16,7 @@ const char* get_mime_type(const char* file_ext){
     }
 }
 
-const char* url_decode(const char* src){
+char* url_decode(const char* src){
     size_t src_len = sizeof(src);
     char* decoded = malloc(src_len + 1);
     size_t decoded_len = 0;
@@ -24,7 +25,7 @@ const char* url_decode(const char* src){
     for(size_t i = 0; i < src_len; i++){
         if (src[i] == '%' && i + 2 < src_len){
             int hex_val;
-            sscanf(src + i + 1, "%2sx", &hex_val);
+            sscanf(src + i + 1, "%2x", &hex_val);
             decoded[decoded_len++] = hex_val;
             i += 2;
         } else {
