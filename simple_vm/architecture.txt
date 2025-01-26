@@ -1,0 +1,30 @@
+Small Vm with generic and special Register
+
+Register:
+    All Purpose:
+        A, B, C, D, E, F, G, H
+    Special:
+        IP, SP, FLAGS
+
+ISA:
+    Arithmetic:
+        ADD {R1} {R2}: Adds Content of R1 and R2, Result is stored in R1
+        SUB {R1} {R2}: Subtracts Content of R2 from R1, Result is stored in R1
+        MUL {R1} {R2}: Multiplies Content of R1 and R2, Result is stored in R1
+
+    Logic:
+        AND {R1} {R2}: Applies Logical AND on R1 and R2, Result is stored in R1
+        OR {R1} {R2}: Applies Logical OR on R1 and R2, Result is stored in R1
+        NOT {R1}: Inverts Bit of R1
+        XOR {R1} {R2}: Applies Logical XOR on R1 and R2, Result is stored in R1
+
+    Storage:
+        PUSH {D}: Pushes Data to the Stack and Increments the Stack Pointer
+        POP : Pops the Top of the Stack and Decrements the Stack Pointer
+        SET {R} {D}: Sets Register to D 
+
+    Control:
+        JMP {L/LA}: Jumps to Specified Line/Label
+        JMPZ {L/LA}: Jumps to Specified Line/Label if 0 Flag is Storage, Flag gets Reset
+        JMPOF {L/LA}: Jumps to Specified Line/Label if Overflow Flag is Set, Flag gets Reset
+        HLT: Terminates Execution
