@@ -5,7 +5,7 @@
 #include <pthread.h>
 #include <unistd.h>
 
-#include <util.h>
+
 #include "./lib/utility_functions.c"
 
 #define PORT 8080
