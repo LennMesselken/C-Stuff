@@ -108,16 +108,39 @@ int main(){
                     close(clients[i].socket);
                     pds[i].fd = -1;
                     clients[i].socket = -1; 
-                } else {
+                } else {    
                     buffer[bytes_read] = '\0';
                     printf("%s : %s", clients[i].username, buffer);
 
-                    //Broadcast to rest of clients
-                    for (int j = 1; j < MAX_CLIENTS; j++){
-                        if(clients[i].socket != -1 && j != i){
-                            char message[BUFFER_SIZE + USERNAME_LEN];
-                            snprintf(message, sizeof(message), "[%s]: %s", clients[i].username, buffer);
-                            send(clients[j].socket, message, strlen(message), 0);
+                    //check if somenone is tagged
+                    if (buffer[0] == '@'){
+                        //get the the tagged username
+                        char username_buffer[USERNAME_LEN];
+                        for (int i = 0; i <  USERNAME_LEN; i++){
+                            if (buffer[1+i] != ' '){
+                                username_buffer[i] = buffer[1+i];
+                            } else {
+                                username_buffer[i] = '\0';
+                            }
+                        }
+                        //get the tagged user
+                        for(int i = 0; i < MAX_CLIENTS; i++){
+                            if (strcmp(clients[i].username, username_buffer) == 0){
+                                char message[BUFFER_SIZE + USERNAME_LEN];
+                                snprintf(message, sizeof(message), "[%s]: %s", clients[i].username, buffer);
+                                send(clients[i].socket, message, strlen(message), 0);
+                                break;
+                            }
+                        }
+                    } else {
+                
+                        //Broadcast to rest of clients
+                        for (int j = 1; j < MAX_CLIENTS; j++){
+                            if(clients[i].socket != -1 && j != i){
+                                char message[BUFFER_SIZE + USERNAME_LEN];
+                                snprintf(message, sizeof(message), "[%s]: %s", clients[i].username, buffer);
+                                send(clients[j].socket, message, strlen(message), 0);
+                            }
                         }
                     }
                 }
