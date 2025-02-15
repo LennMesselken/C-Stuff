@@ -14,6 +14,10 @@ int main() {
         ClearBackground(RAYWHITE);
         DrawText("This is a test", 350, 280, 20, BLACK);
         DrawFPS(0,0);
+         
+        if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)){
+            DrawRectangle(0, 100, 200, 100, SKYBLUE); 
+        };   
         EndDrawing();
 
         
