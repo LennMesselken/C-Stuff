@@ -23,6 +23,18 @@ void SLL_list_init(SLL* List){
     return;
 }
 
+int SLL_get_length(SLL* List){
+    if(List->head == NULL){
+        return 0;
+    }
+    int l = 1;
+    SLL_Node* current = List->head->next;
+    while(current != NULL){
+        l++;
+        current = current->next;
+    }
+    return l;
+};
 
 void SLL_insert(SLL* List, int index, int value){
     if (index == 0){
@@ -77,19 +89,6 @@ int SLL_contains(SLL* List, int value){
         }
     }
     return -1;
-};
-
-int SLL_get_length(SLL* List){
-    if(List->head == NULL){
-        return 0;
-    }
-    int l = 1;
-    SLL_Node* current = List->head->next;
-    while(current != NULL){
-        l++;
-        current = current->next;
-    }
-    return l;
 };
 
 void SLL_remove(SLL* List, int index){
