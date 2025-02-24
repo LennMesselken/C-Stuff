@@ -30,10 +30,10 @@ void BST_insert(BST* Tree, int value){
         Tree->root = newNode;
         return;
     }
-    BST_Node* leading, trailing;
+    BST_Node* leading, *trailing;
     leading = Tree->root;
     while (leading != NULL){
-        trailing = *leading;
+        trailing = leading;
         if (value < leading->value){
             leading = leading->left;
             continue;
@@ -43,27 +43,28 @@ void BST_insert(BST* Tree, int value){
         }
     }
 
-    if (value < trailing.value){
-        trailing.left = newNode;
+    if (value < trailing->value){
+        trailing->left = newNode;
     } else {
-        trailing.right = newNode;
+        trailing->right = newNode;
     }
     return;
 }
 
-
+void BST_Node_print(BST_Node* node){
+    if(node != NULL){
+        BST_Node_print(node->left);
+        printf("%d ", node->value);
+        BST_Node_print(node->right);
+    }
+}
 
 void BST_print(BST* Tree){
-    BST_Node* current = Tree->root;
-    while(current != NULL){
-        printf("%d >left> ", current->value);
-        current = current->left;
-    }
+    BST_Node_print(Tree->root);
     printf("\n");
-    return;
-    
-    
 }
+
+
 
 int main(){
     BST test_tree;
