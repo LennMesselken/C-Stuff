@@ -1,6 +1,7 @@
 #include "include/raylib.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include "include/bst.h"
 
 #define X_SIZE 800
 #define Y_SIZE 600
@@ -12,6 +13,8 @@
 #define TEXT_LENGTH 4
 
 int main() {
+    BST test_bst;
+    BST_init(&test_bst);
     InitWindow(X_SIZE, Y_SIZE, "Hello World");
     SetTargetFPS(120);
 
